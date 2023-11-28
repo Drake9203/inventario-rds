@@ -1,1 +1,111 @@
 /* You can add global styles to this file, and also import other style files */
+
+.page-content {
+    padding: calc(70px + 20px) calc(20px / 2) 60px calc(20px / 2);
+}
+.page-title-box {
+    padding-bottom: 20px;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #038edc;
+    border-color: #038edc;
+}
+.datatables {
+    thead {
+        tr {
+            th {
+                position: relative;
+
+                &:not(.no-short) {
+                    &:before {
+                        content: "\F0143";
+                        position: absolute;
+                        right: 0;
+                        top: 7px;
+                        font: normal normal normal 24px/1 "Material Design Icons";
+                        opacity: 0.3;
+                    }
+
+                    &:after {
+                        content: "\F0140";
+                        position: absolute;
+                        right: 0;
+                        top: 14px;
+                        opacity: 0.3;
+                        font: normal normal normal 24px/1 "Material Design Icons";
+                    }
+                }
+            }
+
+            .asc {
+                &:before {
+                    opacity: 1;
+                }
+            }
+
+            .desc {
+                &:after {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}
+
+
+
+.card {
+    margin-bottom: 20px;
+    box-shadow: 0 2px 3px #eaedf2;
+}
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid #eff0f2;
+    border-radius: 0.25rem;
+}
+
+.card-header {
+    padding: 1rem 1.25rem;
+    margin-bottom: 0;
+    background-color: #fff;
+    border-bottom: 1px solid #eff0f2;
+}
+
+.pagination-rounded {
+    .page-link {
+        border-radius: 30px !important;
+        margin: 0 5px;
+        border: none;
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        text-align: center;
+        line-height: 32px;
+    }
+    .page-item{
+        &.disabled{
+            .page-link{
+                color:#7e93a0;
+                background-color: #032d46;
+                border-color: #043a5a;
+            }
+        }
+
+        &.active{
+            .page-link{
+                color: white;
+                background-color: #038edc;
+                border-color: #038edc;
+            }
+        }
+    }
+}

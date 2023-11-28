@@ -8,6 +8,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { GoogleGuard } from './guards/google.guard';
 import { AccountModule } from './account/account.module';
 import { LayoutsModule } from './layouts/layouts.module';
+import { FakeBackendInterceptor } from './utils/fake-backend';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -20,6 +23,7 @@ import { LayoutsModule } from './layouts/layouts.module';
     AccountModule,
     LayoutsModule,
     NgbModule,
+    HttpClientModule
   ],
   providers: [
     GoogleGuard,
@@ -39,7 +43,8 @@ import { LayoutsModule } from './layouts/layouts.module';
           console.error(err);
         }
       } as SocialAuthServiceConfig,
-    }
+    },
+    { provide: HTTP_INTERCEPTORS, useClass: FakeBackendInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })

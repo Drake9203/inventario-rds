@@ -1,46 +1,161 @@
-<div class="main-container">
-<div>
-    <h1 class="title"> Lista de categorias</h1>
-    <a class="title" href="javascript:void(0);" (click)="openModal()"> Agregar categorias <i class="fas fa-plus-circle"></i></a>
+<div class="row">
+    <div class="page-title-box d-flex align-items-center justify-content-between">
+        <h4 class="mb-0">CATEGORIAS</h4>
+    </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header justify-content-between d-flex align-items-center">
+                <a href="javascript:void(0);" class="btn btn-sm btn-primary" (click)="openModal()">AGREGAR CATEGORIA <i
+                        class="mdi mdi-arrow-right align-middle"></i></a>
+            </div>
+            <div class="card-body">
+                <div class="row mb-md-2">
+                    <div class="col-sm-12 col-md-3">
+                        <div id="tickets-table_filter" class="dataTables_filter text-md-start">
+                            <label class="d-inline-flex align-items-center">Buscar:
+                                <input description="text" name="searchTerm" class="form-control form-control-sm ms-2"
+                                    aria-controls="tickets-table" placeholder="Buscar"
+                                    [(ngModel)]="params.searchTerm" />
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                        <div id="tickets-table_filter" class="dataTables_filter text-md-start">
+                            <button description="button" class="btn btn-light btn-sm sectorial-button mx-2"
+                                (click)="search()">
+                                Buscar
+                            </button>
+                            <button description="button" class="btn btn-light btn-sm sectorial-button mx-2"
+                                (click)="clearData()">
+                                Limpiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-4 text-md-right float-md-end">
+                        <div class="dataTables_length text-md-right float-md-end" id="tickets-table_length">
+                            <label class="">Ver
+                                <select class="btn-rounded" [ngModel]="paginationInfo.pageSize"
+                                    (ngModelChange)="onChangePageSize($event)">
+                                    <option [ngValue]="20">20</option>
+                                    <option [ngValue]="40">40</option>
+                                    <option [ngValue]="60">60</option>
+                                </select>
+                                Registros</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="datatable" class="table table-bordered dt-responsive nowrap w-100 datatables">
+                        <thead>
+                            <tr>
+                                <th (click)="sort('name')" [ngClass]="{
+                    asc: isDesc && column == 'name',
+                    desc: !isDesc && column == 'name'
+                  }">
+                                    Nombre
+                                </th>
+                                <th (click)="sort('date')" [ngClass]="{
+                    asc: isDesc && column == 'date',
+                    desc: !isDesc && column == 'date'
+                  }">
+                                    Fecha de ultima actualización
+                                </th>
+                                <th (click)="sort('description')" [ngClass]="{
+                  asc: isDesc && column == 'description',
+                  desc: !isDesc && column == 'description'
+                }">
+                                    Descripción
+                                </th>
+                                <th (click)="sort('count')" [ngClass]="{
+                  asc: isDesc && column == 'count',
+                  desc: !isDesc && column == 'count'
+                }">
+                                    Cantidad De Productos
+                                </th>
+                                <th (click)="sort('img')" [ngClass]="{
+                    asc: isDesc && column == 'img',
+                    desc: !isDesc && column == 'img'
+                  }">
+                                    Imagen
+                                </th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let category of dataCategory">
+                            <tr>
+                                <td>
+                                    <a href="javascript:void(0);" class="link-offset-3" (click)="openModal(category)">{{
+                                        category.name }}</a>
+                                </td>
+                                <td>
+                                    <span>{{ moment(category.date).format("MMM yy") }}</span>
+                                </td>
+                                <td>
+                                    <span>{{ category.description }} </span>
+                                </td>
+                                <td>
+                                    <span>{{ category.count }} </span>
+                                </td>
+                                <td>
+                                    <span>{{ category.img }} </span>
+                                </td>
+                                <td>
+                                    <span> <a href="javascript: void(0);" class="has-arrow" aria-expanded="true"
+                                            (click)="openModal(category)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round"
+                                                class="feather feather-edit-3 icon nav-icon">
+                                                <path d="M12 20h9"></path>
+                                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z">
+                                                </path>
+                                            </svg>
+                                        </a>
+                                    /
+                                    <a href="javascript: void(0);" class="has-arrow" aria-expanded="true" (click)="onDelete(category)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                                          <rect x="0" y="0" width="24" height="24" fill="none" stroke="none" />
+                                          <path fill="currentColor" d="M6 7H5v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7H6zm4 12H8v-9h2v9zm6 0h-2v-9h2v9zm.618-15L15 2H9L7.382 4H3v2h18V4z" />
+                                        </svg>
+                                      </a>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row justify-content-md-between align-items-md-center mt-2">
+                    <div class="col-sm-12 col-md-5">
+                        <div class="dataTables_info mb-2" id="tickets-table_info" role="status" aria-live="polite">
+                            Viendo
+                            {{ (paginationInfo.page - 1) * paginationInfo.pageSize + 1 }} -
+                            {{
+                            paginationInfo.page * paginationInfo.pageSize >=
+                            paginationInfo.totalRecords
+                            ? paginationInfo.totalRecords
+                            : paginationInfo.page * paginationInfo.pageSize
+                            }}
+                            de
+                            {{ paginationInfo.totalRecords }}
+                            registros
+                        </div>
+                    </div>
+                    <!-- Pagination -->
+                    <div class="col-sm-12 col-md-5">
+                        <div class="text-md-right float-md-end pagination-rounded">
+                            <ngb-pagination [collectionSize]="paginationInfo.totalRecords!"
+                                [(page)]="paginationInfo.page" [pageSize]="paginationInfo.pageSize"
+                                (pageChange)="selectPage(paginationInfo.page)">
+                            </ngb-pagination>
+                        </div>
+                    </div>
+                    <!-- End Pagination -->
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-    <!-- <div class="card m-3" style="max-width: 350px;">
-        <div class="row g-0">
-            <div class="col-md-4">
-                <img src="https://mdbcdn.b-cdn.net/wp-content/uploads/2020/06/vertical.webp"
-                    alt="Trendy Pants and Shoes" class="img-fluid rounded-start" />
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">
-                        This is a wider card with supporting text below as a natural lead-in to
-                        additional content. This content is a little bit longer.
-                    </p>
-                    <p class="card-text">
-                        <small class="text-muted">Last updated 3 mins ago</small>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div> -->
-    <section class="categorys container">
 
-        <div class="category__child">
-            <div class="child__content">
-                <div class="content__img">
-                    <img src="https://mdbcdn.b-cdn.net/wp-content/uploads/2020/06/vertical.webp"
-                        alt="Trendy Pants and Shoes" class="category__img" />
-                </div>
-                <div class="content__dsc">
-                    <h2 class="dsc__title">Hola, Soy Jordan, Tu Instructor.</h2>
-                    <p class="dsc__paragraph m-1">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ea doloribus unde
-                        alias rerum amet veniam.</p>
-                    <p class="dsc__update p-0 m-0">
-                        <small class="text-muted">Last updated 3 mins ago</small>
-                    </p>
-                </div>
-            </div>
-        </div>
-
-    </section>
+<div class="my-overlay" *ngIf="isBusy">
+    <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
 </div>

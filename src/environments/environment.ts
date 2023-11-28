@@ -1,4 +1,4 @@
 export const environment = {
-  URL:''
+  LOCAL:'http://localhost:300/api/'
 };
 

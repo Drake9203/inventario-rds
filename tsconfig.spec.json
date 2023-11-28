@@ -6,7 +6,8 @@
     "types": [
       "jasmine",
       "@angular/localize"
-    ]
+    ],
+    "noPropertyAccessFromIndexSignature": false,
   },
   "include": [
     "src/**/*.spec.ts",
