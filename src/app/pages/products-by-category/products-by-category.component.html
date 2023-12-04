@@ -84,10 +84,7 @@
                         <tbody *ngFor="let category of dataCategory">
                             <tr>
                                 <td>
-                                    <a href="javascript:void(0);" class="link-offset-3"
-                                    (click)="goTo(category.id!)"
-                                    >{{
-                                        category.name }}</a>
+                                    <span>{{ category.name }} </span>
                                 </td>
                                 <td>
                                     <span>{{ moment(category.date).format("MMM yy") }}</span>

@@ -5,7 +5,7 @@ import { GoogleGuard } from './guards/google.guard';
 
 const routes: Routes = [
   {
-    path: 'category',
+    path: '',
     component: LayoutsComponent,
     loadChildren: () =>
     import('./pages/pages.module').then((m) => m.PagesModule),

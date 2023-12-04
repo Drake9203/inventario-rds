@@ -1,21 +1,25 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CategoryComponent } from './modal/category/category.component';
 import { ICategory, PaginationInfo, paramRequest } from '../../models/model';
 import * as moment from 'moment';
 import Swal, { SweetAlertIcon } from 'sweetalert2';
-import { CategorysService } from './categorys.service';
 import * as uuid from 'uuid';
-import { CustomMessageAlert } from '../../utils/customMessageAlert';
+import { CategorysService } from '../categorys/categorys.service';
+import { ProductComponent } from './modal/product/product.component';
 @Component({
-  selector: 'app-categorys',
-  templateUrl: './categorys.component.html',
-  styleUrls: ['./categorys.component.css']
+  selector: 'app-products-by-category',
+  templateUrl: './products-by-category.component.html',
+  styleUrls: ['./products-by-category.component.css']
 })
 
 
-export class CategorysComponent {
+@Component({
+  selector: 'app-products-by-category',
+  templateUrl: './products-by-category.component.html',
+  styleUrls: ['./products-by-category.component.css']
+})
+export class ProductsByCategoryComponent {
   dataCategory!: ICategory[]
   dataCategoryTemp!: ICategory[]
   moment: any = moment;
@@ -36,21 +40,37 @@ export class CategorysComponent {
   constructor(
     private modalService: NgbModal,
     private router: Router,
-    private categorysService: CategorysService,
-    private customMessageAlert:CustomMessageAlert
+    private categorysService: CategorysService
   ) {
     this.getData()
   }
 
   getData() {
+    console.log(22222222);
     this.categorysService.getCategorys().subscribe((resp: ICategory[]) => {
-      if(resp.length > 0){
-        this.dataCategory = resp
-      }
+
+      // console.log(resp, "getData resp");
+      // this.dataCategory.push(resp)
+      this.dataCategory = [{
+        id: "string1",
+        name: "string",
+        date: "string",
+        description: "string",
+        img: "string",
+        count: 5
+      },
+      {
+        id: "string2",
+        name: "string",
+        date: "string",
+        description: "string",
+        img: "string",
+        count: 5
+      }]
     })
   }
   openModal(data?: ICategory) {
-    const modalRef = this.modalService.open(CategoryComponent, {
+    const modalRef = this.modalService.open(ProductComponent, {
       centered: true,
       windowClass: 'modal-holder',
     });
@@ -68,7 +88,7 @@ export class CategorysComponent {
           console.log(resp, "resp");
         })
       }
-      this.getData()
+
     });
   }
 
@@ -128,18 +148,8 @@ export class CategorysComponent {
     }).then((result) => {
       /* Read more about handling dismissals below */
       if (result.isConfirmed) {
-        this.categorysService.deteleCategory(category.id!).subscribe( catDelte => {
-          this.customMessageAlert.actionMsg('Registro eliminado', "OK!!", 'success');
-        },()=>{
-          this.customMessageAlert.actionMsg('Error al eliminar el registro',"ERROR!!","warning");
-        },() => {
-          this.getData();
-        })
+        this.dataCategory = this.dataCategoryTemp.filter(c => c.id !== category.id)
       }
     });
-  }
-
-  goTo(id:string){
-    this.router.navigate(['/category/' + id]);
   }
 }

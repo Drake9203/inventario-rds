@@ -3,7 +3,7 @@ export interface ICategory {
     name: string
     date: string
     description:string
-    img:string
+    img?:string
     count:number
 }
 
@@ -18,3 +18,13 @@ export interface PaginationInfo {
     skip?: number,
     take?: number
   }
+
+  export interface IProduct {
+    id?: string
+    idParent: string
+    name: string
+    price: string
+    date: string
+    description:string
+    img:string
+}

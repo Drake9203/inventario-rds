@@ -13,6 +13,6 @@ export class NavbarComponent implements OnInit {
    if(userString){
      this.user = JSON.parse(userString) as SocialUser
    }
-   console.log(this.user, "this.user");
+  //  console.log(this.user, "this.user");
   }
 }

@@ -1,6 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import * as uuid from 'uuid';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ICategory } from '../../../../models/model';
 
 @Component({
@@ -8,23 +7,27 @@ import { ICategory } from '../../../../models/model';
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.css']
 })
-export class CategoryComponent {
+export class CategoryComponent  implements OnInit{
   @Input() model!: ICategory;
   @Output() onCancel: EventEmitter<void> = new EventEmitter();
   @Output() onSave: EventEmitter<any> = new EventEmitter();
   submit!: boolean;
   isEdit: boolean = true;
+  title!: string
   validatorRequired = Validators.required;
-  validationform: FormGroup =this.fb.group({
-    id: [''],
+  validationform: FormGroup = this.fb.group({
     name: ['', [this.validatorRequired]],
-    date: ['', [this.validatorRequired]],
     description: ['', [this.validatorRequired]],
-    img: ['', [this.validatorRequired]]
+    img: ['']
   });
   constructor(public fb: FormBuilder) {
 
+  }
+
+  ngOnInit(): void {
+    this.title = 'EDITAR'
     if (!this.model) {
+      this.title = 'CREAR'
       this.isEdit = false;
       this.model = {
         id: '',
@@ -32,33 +35,26 @@ export class CategoryComponent {
         date: '',
         description: '',
         img: '',
-        count:0
+        count: 0
       }
     }
-
   }
 
-  // get form() {
-  //   return this.validationform.controls;
-  // }
-  get form(): { [key: string]: AbstractControl; } {
+  get form() {
     return this.validationform.controls;
-}
+  }
 
   onClose() {
     this.onCancel.emit();
   }
 
   onSubmit() {
-    console.log(this.isEdit, "this.isEdit");
-    console.log(this.validationform.value, "this.validationform.valid");
     this.submit = true;
     if (!this.validationform.valid) return;
     let objCategory = this.validationform.value;
     if (!!this.isEdit) {
       objCategory.id = this.model.id;
     }
-    console.log(objCategory, "objCategory");
     this.onSave.emit(objCategory);
   }
 }
