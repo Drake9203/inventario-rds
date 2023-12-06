@@ -10,6 +10,7 @@ import * as uuid from 'uuid';
 import { CustomMessageAlert } from '../../utils/customMessageAlert';
 import * as _ from 'lodash';
 import { ProductComponent } from '../products-by-category/modal/product/product.component';
+import { ProductService } from '../products-by-category/product.service';
 @Component({
   selector: 'app-categorys',
   templateUrl: './categorys.component.html',
@@ -39,6 +40,7 @@ export class CategorysComponent {
     private modalService: NgbModal,
     private router: Router,
     private categorysService: CategorysService,
+    private productService: ProductService,
     private customMessageAlert:CustomMessageAlert
   ) {
     this.getData()
@@ -142,7 +144,7 @@ export class CategorysComponent {
   }
 
   goTo(id:string){
-    this.router.navigate(['/category/' + id]);
+    this.router.navigate(['category/' + id]);
   }
 
   onAddProduct(idCategory:string){
@@ -160,10 +162,10 @@ export class CategorysComponent {
       } else {
         product.id = uuid.v4()
         product.date = moment().format('YYYY-MM-DD');
-        this.categorysService.createProduct(product).subscribe((resp) => {
+        this.productService.createProduct(product).subscribe((resp) => {
         })
       }
-      // this.getData()
+      this.getData()
     });
   }
 }

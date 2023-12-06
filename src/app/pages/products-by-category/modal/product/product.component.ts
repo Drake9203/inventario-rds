@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ICategory, IProduct } from '../../../../models/model';
+import { IProduct } from '../../../../models/model';
 
 @Component({
   selector: 'app-product',
@@ -17,20 +17,12 @@ export class ProductComponent implements OnInit {
   title!: string
   validatorRequired = Validators.required;
   validationform: FormGroup = this.fb.group({
-    // idCategory: ['', [this.validatorRequired]],
     name: ['', [this.validatorRequired]],
     price: ['', [this.validatorRequired]],
     description: ['', [this.validatorRequired]],
     img: ['']
   });
 
-  // id?: string
-  // idCategory?: string
-  // name: string
-  // price: string
-  // date?: string
-  // description:string
-  // img?:string
 
   constructor(public fb: FormBuilder){
 

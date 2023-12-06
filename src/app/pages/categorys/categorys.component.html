@@ -58,7 +58,7 @@
                     asc: isDesc && column == 'date',
                     desc: !isDesc && column == 'date'
                   }">
-                                    Fecha de ultima actualización
+                                    Fecha de creación
                                 </th>
                                 <th (click)="sort('description')" [ngClass]="{
                   asc: isDesc && column == 'description',
@@ -94,7 +94,7 @@
                                     <span>{{ category.description }} </span>
                                 </td>
                                 <td>
-                                    <!-- <span>{{ category.products.length? category.products.length : 0 }} </span> -->
+                                    <span>{{ category.products?.length ? category.products?.length : 0  }} </span>
                                 </td>
                                 <td>
                                     <span>{{ category.img }} </span>

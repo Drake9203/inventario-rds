@@ -1,27 +1,26 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ICategory, PaginationInfo, paramRequest } from '../../models/model';
+import { ICategory, IProduct, PaginationInfo, paramRequest } from '../../models/model';
 import * as moment from 'moment';
-import Swal, { SweetAlertIcon } from 'sweetalert2';
+import * as _ from 'lodash';
 import * as uuid from 'uuid';
 import { CategorysService } from '../categorys/categorys.service';
 import { ProductComponent } from './modal/product/product.component';
+import { ProductService } from './product.service';
+import Swal, { SweetAlertIcon } from 'sweetalert2';
+import { CustomMessageAlert } from '../../utils/customMessageAlert';
 @Component({
   selector: 'app-products-by-category',
   templateUrl: './products-by-category.component.html',
   styleUrls: ['./products-by-category.component.css']
 })
 
-
-@Component({
-  selector: 'app-products-by-category',
-  templateUrl: './products-by-category.component.html',
-  styleUrls: ['./products-by-category.component.css']
-})
 export class ProductsByCategoryComponent {
-  dataCategory!: ICategory[]
-  dataCategoryTemp!: ICategory[]
+  title!:string
+  categoryId!:string
+  dataProducts!: IProduct[]
+  dataProductTemp!: IProduct[]
   moment: any = moment;
   dataPerPage: number = 20;
   isDesc: boolean = false;
@@ -40,39 +39,44 @@ export class ProductsByCategoryComponent {
   constructor(
     private modalService: NgbModal,
     private router: Router,
-    private categorysService: CategorysService
+    private categorysService: CategorysService,
+    private productService: ProductService,
+    private routeParams: ActivatedRoute,
+    private customMessageAlert:CustomMessageAlert
   ) {
-    this.getData()
+    this.categoryId = this.routeParams.snapshot.paramMap.get('id') as string;
+
+    if(this.categoryId){
+      this.getData()
+    }
   }
 
   getData() {
-    console.log(22222222);
-    this.categorysService.getCategorys().subscribe((resp: ICategory[]) => {
-
-      // console.log(resp, "getData resp");
-      // this.dataCategory.push(resp)
+    this.categorysService.getCategoryById(this.categoryId).subscribe((resp: ICategory) => {
+        this.dataProducts =  _.orderBy(resp.products, "name", "asc");
+        this.title = resp.name
+        this.paginationInfo.totalRecords = this.dataProducts.length;
     })
   }
-  openModal(data?: ICategory) {
+  openModal() {
     const modalRef = this.modalService.open(ProductComponent, {
       centered: true,
       windowClass: 'modal-holder',
     });
-    modalRef.componentInstance.model = data;
+    modalRef.componentInstance.idCategory = this.categoryId;
     modalRef.componentInstance.onCancel.subscribe(() => modalRef.close());
-    modalRef.componentInstance.onSave.subscribe((category: ICategory) => {
+    modalRef.componentInstance.onSave.subscribe((product: IProduct) => {
+      console.log(product, "product");
       modalRef.close();
-      category.date = moment().format('YYYY-MM-DD');
-
-      if (category.id) {
-
+      if (product.id) {
+        
       } else {
-        category.id = uuid.v4()
-        this.categorysService.createCategory(category).subscribe((resp) => {
-          console.log(resp, "resp");
+        product.id = uuid.v4()
+        product.date = moment().format('YYYY-MM-DD');
+        this.productService.createProduct(product).subscribe((resp) => {
         })
       }
-
+      this.getData()
     });
   }
 
@@ -113,14 +117,14 @@ export class ProductsByCategoryComponent {
     // this.fetchData(this.params);
   }
 
-  onDelete(categorie: ICategory): void {
+  onDelete(product: IProduct): void {
 
-    this.onDeleteMessage("Desea eliminar la categoria?", categorie);
+    this.onDeleteMessage("Desea eliminar el producto?", product);
 
   }
 
-  onDeleteMessage(message: string, category: ICategory) {
-    this.dataCategoryTemp = [...this.dataCategory]
+  onDeleteMessage(message: string, product: IProduct) {
+    this.dataProductTemp = [...this.dataProducts]
     Swal.fire({
       text: message,
       icon: 'error',
@@ -132,7 +136,13 @@ export class ProductsByCategoryComponent {
     }).then((result) => {
       /* Read more about handling dismissals below */
       if (result.isConfirmed) {
-        this.dataCategory = this.dataCategoryTemp.filter(c => c.id !== category.id)
+        this.productService.deteleProduct(this.categoryId, product.id!).subscribe( catDelte => {
+          this.customMessageAlert.actionMsg('Registro eliminado', "OK!!", 'success');
+        },()=>{
+          this.customMessageAlert.actionMsg('Error al eliminar el registro',"ERROR!!","warning");
+        },() => {
+          this.getData();
+        })
       }
     });
   }

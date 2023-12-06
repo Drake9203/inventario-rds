@@ -1,11 +1,11 @@
 <div class="row">
     <div class="page-title-box d-flex align-items-center justify-content-between">
-        <h4 class="mb-0">CATEGORIAS</h4>
+        <h4 class="mb-0">{{title | uppercase}}</h4>
     </div>
     <div class="col-md-12">
         <div class="card">
             <div class="card-header justify-content-between d-flex align-items-center">
-                <a href="javascript:void(0);" class="btn btn-sm btn-primary" (click)="openModal()">AGREGAR CATEGORIA <i
+                <a href="javascript:void(0);" class="btn btn-sm btn-primary" (click)="openModal()">AGREGAR PRODUCTO <i
                         class="mdi mdi-arrow-right align-middle"></i></a>
             </div>
             <div class="card-body">
@@ -54,23 +54,23 @@
                   }">
                                     Nombre
                                 </th>
+                                <th (click)="sort('price')" [ngClass]="{
+                                    asc: isDesc && column == 'price',
+                                    desc: !isDesc && column == 'price'
+                                  }">
+                                                    Precio
+                                                </th>
                                 <th (click)="sort('date')" [ngClass]="{
                     asc: isDesc && column == 'date',
                     desc: !isDesc && column == 'date'
                   }">
-                                    Fecha de ultima actualización
+                                    Fecha de creación
                                 </th>
                                 <th (click)="sort('description')" [ngClass]="{
                   asc: isDesc && column == 'description',
                   desc: !isDesc && column == 'description'
                 }">
                                     Descripción
-                                </th>
-                                <th (click)="sort('count')" [ngClass]="{
-                  asc: isDesc && column == 'count',
-                  desc: !isDesc && column == 'count'
-                }">
-                                    Cantidad De Productos
                                 </th>
                                 <th (click)="sort('img')" [ngClass]="{
                     asc: isDesc && column == 'img',
@@ -81,26 +81,26 @@
                                 <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody *ngFor="let category of dataCategory">
+                        <tbody *ngFor="let product of dataProducts">
                             <tr>
                                 <td>
-                                    <span>{{ category.name }} </span>
+                                    <span>{{ product.name }} </span>
                                 </td>
                                 <td>
-                                    <span>{{ moment(category.date).format("MMM yy") }}</span>
+                                    <span>{{ product.price | currency }} </span>
                                 </td>
                                 <td>
-                                    <span>{{ category.description }} </span>
+                                    <span>{{ moment(product.date).format("MMM yy") }}</span>
                                 </td>
                                 <td>
-                                    <span>{{ category.products }} </span>
+                                    <span>{{ product.description }} </span>
                                 </td>
                                 <td>
-                                    <span>{{ category.img }} </span>
+                                    <span>{{ product.img }} </span>
                                 </td>
                                 <td>
                                     <span> <a href="javascript: void(0);" class="has-arrow" aria-expanded="true"
-                                            (click)="openModal(category)">
+                                            (click)="openModal()">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                                 stroke-linecap="round" stroke-linejoin="round"
@@ -112,7 +112,7 @@
                                         </a>
                                         /
                                         <a href="javascript: void(0);" class="has-arrow" aria-expanded="true"
-                                            (click)="onDelete(category)">
+                                            (click)="onDelete(product)">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
                                                 <rect x="0" y="0" width="24" height="24" fill="none" stroke="none" />
@@ -142,7 +142,6 @@
                             registros
                         </div>
                     </div>
-                    <!-- Pagination -->
                     <div class="col-sm-12 col-md-5">
                         <div class="text-md-right float-md-end pagination-rounded">
                             <ngb-pagination [collectionSize]="paginationInfo.totalRecords!"
@@ -151,13 +150,12 @@
                             </ngb-pagination>
                         </div>
                     </div>
-                    <!-- End Pagination -->
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="my-overlay" *ngIf="isBusy">
+<!-- <div class="my-overlay" *ngIf="isBusy">
     <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-</div>
+</div> -->

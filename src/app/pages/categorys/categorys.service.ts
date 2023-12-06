@@ -34,17 +34,13 @@ export class CategorysService {
     );
   }
 
-  getProductByCategory() {
-    let url = new URL(`${this.URL}category`);
+  getCategoryById(categoryId: string) {
+    let url = new URL(`${this.URL}categoryById/${categoryId}`);
     return this.http
-      .get<ICategory[]>(url.toString())
+      .get<ICategory>(url.toString())
       .pipe(
         catchError((error: HttpErrorResponse) => httpHandlePrivateError(error))
       );
-  }
-
-  createProduct(product: IProduct) {
-    return this.http.post(`${this.URL}product`, product);
   }
 
 }
