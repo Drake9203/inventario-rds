@@ -2,8 +2,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutsComponent } from './layouts/layouts.component';
 import { GoogleGuard } from './guards/google.guard';
+import { LoginComponent } from './account/login/login.component';
 
 const routes: Routes = [
+  { path: '', pathMatch: 'full', redirectTo: '/login' },
   {
     path: '',
     component: LayoutsComponent,
@@ -16,6 +18,7 @@ const routes: Routes = [
     loadChildren: () =>
       import('./account/account.module').then((m) => m.AccountModule),
   },
+  { path: '**', component: LoginComponent },
 ];
 
 @NgModule({
