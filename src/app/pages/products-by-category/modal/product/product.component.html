@@ -1,1 +1,66 @@
-<p>product works!</p>
+<div class="card">
+    <div class="row">
+      <div class="col-xl-12">
+        <div class="card-header justify-content-between d-flex align-items-center">
+          <h4 class="card-title"> {{title}} PRODUCTO</h4>
+        </div>
+        <div class="card-body">
+          <form class="needs-validation" novalidate [formGroup]="validationform">
+            <div class="row">
+    
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label" for="validationCustom01">Nombre</label>
+                  <input type="text" class="form-control" formControlName="name" [(ngModel)]="product.name"
+                    #name placeholder="Nombre" [ngClass]="{ 'is-invalid': submit && form['name'].errors }" />
+                  <div *ngIf="submit && form['name'].errors" class="invalid-feedback">
+                    <span *ngIf="form['name'].errors['required']">Nombre inválido</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label" for="validationCustom01">
+                    Descripción</label>
+                  <input type="text" class="form-control" formControlName="description" [(ngModel)]="product.description"
+                    #description placeholder="Descripción"
+                    [ngClass]="{ 'is-invalid': submit && form['description'].errors }" />
+                  <div *ngIf="submit && form['description'].errors" class="invalid-feedback">
+                    <span *ngIf="form['description'].errors['required']">Descripción inválida</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label" for="validationCustom01">Precio</label>
+                  <input type="text" class="form-control" formControlName="price" [(ngModel)]="product.price" #price
+                    placeholder="Url Imagen" [ngClass]="{ 'is-invalid': submit && form['price'].errors }" />
+                  <div *ngIf="submit && form['price'].errors" class="invalid-feedback">
+                    <span *ngIf="form['price'].errors['required']">Precio inválido</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label" for="validationCustom01">Url Imagen</label>
+                  <input type="text" class="form-control" formControlName="img" [(ngModel)]="product.img" #img
+                    placeholder="Url Imagen" [ngClass]="{ 'is-invalid': submit && form['img'].errors }" />
+                  <div *ngIf="submit && form['img'].errors" class="invalid-feedback">
+                    <span *ngIf="form['img'].errors['required']">Url Imagen inválido</span>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn btn-light" (click)="onClose()" type="button">
+                  Cancelar
+                </button>
+                <button class="btn btn-primary" (click)="onSubmit()" type="submit">
+                  Guardar
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

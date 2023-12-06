@@ -31,8 +31,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                 const newCategory = request.body;
                 // validation
                 if (categorys) {
-                    const duplicateCategory = categorys.filter((category:any) => category.name === newCategory.name).length;
-                   console.log(duplicateCategory, "duplicateCategory");
+                    const duplicateCategory = categorys.filter((category: any) => category.name === newCategory.name).length;
+                    console.log(duplicateCategory, "duplicateCategory");
                     if (duplicateCategory) {
                         return throwError({ error: { message: 'Category "' + newCategory.name + '" is already' } });
                     }
@@ -45,21 +45,39 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             }
 
             if (request.url.includes('/category') && request.method === 'DELETE') {
-                
+
                 const urlParts = request.url.split('/');
                 console.log(urlParts, "urlPartsurlParts");
                 const idCategory = urlParts[urlParts.length - 1];
                 // validation
                 if (categorys) {
-                    const idExists = categorys.filter((category:any) => category.id === idCategory).length;
+                    const idExists = categorys.filter((category: any) => category.id === idCategory).length;
                     console.log(idExists, "idExists");
                     if (!idExists) {
                         return throwError({ error: { message: 'Categoria "' + idCategory + '" no Existe' } });
                     }
                 }
-                categorys = categorys.filter((category:any) => category.id !== idCategory)
+                categorys = categorys.filter((category: any) => category.id !== idCategory)
                 localStorage.setItem('categorys', JSON.stringify(categorys));
 
+                // respond 200 OK
+                return of(new HttpResponse({ status: 200 }));
+            }
+
+            if (request.url.includes('/product') && request.method === 'POST') {
+                const newProduct = request.body;
+                const existsCategory = categorys.filter((category: any) => category.id === newProduct.idCategory).length;
+                if (existsCategory) {
+                    categorys.forEach((category: ICategory) => {
+                        if (category.id === newProduct.idCategory) {
+                            if(!category.products) category.products = []
+                            category.products.push(newProduct)
+                        }
+                    });
+                } else {
+                    return throwError({ error: { message: 'Categoria no Existe' } });
+                }
+                localStorage.setItem('categorys', JSON.stringify(categorys));
                 // respond 200 OK
                 return of(new HttpResponse({ status: 200 }));
             }

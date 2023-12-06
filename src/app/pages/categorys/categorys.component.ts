@@ -2,12 +2,14 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CategoryComponent } from './modal/category/category.component';
-import { ICategory, PaginationInfo, paramRequest } from '../../models/model';
+import { ICategory, IProduct, PaginationInfo, paramRequest } from '../../models/model';
 import * as moment from 'moment';
 import Swal, { SweetAlertIcon } from 'sweetalert2';
 import { CategorysService } from './categorys.service';
 import * as uuid from 'uuid';
 import { CustomMessageAlert } from '../../utils/customMessageAlert';
+import * as _ from 'lodash';
+import { ProductComponent } from '../products-by-category/modal/product/product.component';
 @Component({
   selector: 'app-categorys',
   templateUrl: './categorys.component.html',
@@ -19,14 +21,14 @@ export class CategorysComponent {
   dataCategory!: ICategory[]
   dataCategoryTemp!: ICategory[]
   moment: any = moment;
-  dataPerPage: number = 20;
+  dataPerPage: number = 5;
   isDesc: boolean = false;
   column: any = 'name';
   isBusy: boolean = false;
   paginationInfo: PaginationInfo = {
     totalRecords: 0,
     page: 1,
-    pageSize: 20
+    pageSize: 5
   }
   params: paramRequest = {
     skip: 0,
@@ -46,6 +48,7 @@ export class CategorysComponent {
     this.categorysService.getCategorys().subscribe((resp: ICategory[]) => {
       if(resp.length > 0){
         this.dataCategory = resp
+        this.paginationInfo.totalRecords = resp.length;
       }
     })
   }
@@ -58,14 +61,13 @@ export class CategorysComponent {
     modalRef.componentInstance.onCancel.subscribe(() => modalRef.close());
     modalRef.componentInstance.onSave.subscribe((category: ICategory) => {
       modalRef.close();
-      category.date = moment().format('YYYY-MM-DD');
-
+      
       if (category.id) {
-
+        
       } else {
+        category.date = moment().format('YYYY-MM-DD');
         category.id = uuid.v4()
         this.categorysService.createCategory(category).subscribe((resp) => {
-          console.log(resp, "resp");
         })
       }
       this.getData()
@@ -93,20 +95,20 @@ export class CategorysComponent {
     this.params.skip = skip
   }
 
-  onChangePageSize(dataPerPage: any) {
-    this.params.take = dataPerPage;
+  onChangePageSize(dataPerPage: number) {
+    console.log(dataPerPage, "dataPerPage");
+    this.paginationInfo.pageSize = dataPerPage;
+    console.log(this.paginationInfo.pageSize, "this.paginationInfo.pageSize");
   }
 
   sort(property: string | number) {
-    // this.isDesc = !this.isDesc;
-    // this.column = property;
-    // this.params.orderBy = this.column;
-    // if (this.isDesc) {
-    //   this.params.direction = 'DESC';
-    // } else {
-    //   this.params.direction = 'ASC';
-    // }
-    // this.fetchData(this.params);
+    this.isDesc = !this.isDesc;
+    this.column = property;
+    if (this.isDesc) {
+      this.dataCategory = _.orderBy(this.dataCategory, [property], "desc");
+    } else {
+      this.dataCategory = _.orderBy(this.dataCategory, [property], "asc");
+    }
   }
 
   onDelete(categorie: ICategory): void {
@@ -141,5 +143,27 @@ export class CategorysComponent {
 
   goTo(id:string){
     this.router.navigate(['/category/' + id]);
+  }
+
+  onAddProduct(idCategory:string){
+    const modalRef = this.modalService.open(ProductComponent, {
+      centered: true,
+      windowClass: 'modal-holder',
+    });
+    modalRef.componentInstance.idCategory = idCategory;
+    modalRef.componentInstance.onCancel.subscribe(() => modalRef.close());
+    modalRef.componentInstance.onSave.subscribe((product: IProduct) => {
+      console.log(product, "product");
+      modalRef.close();
+      if (product.id) {
+        
+      } else {
+        product.id = uuid.v4()
+        product.date = moment().format('YYYY-MM-DD');
+        this.categorysService.createProduct(product).subscribe((resp) => {
+        })
+      }
+      // this.getData()
+    });
   }
 }

@@ -51,22 +51,6 @@ export class ProductsByCategoryComponent {
 
       // console.log(resp, "getData resp");
       // this.dataCategory.push(resp)
-      this.dataCategory = [{
-        id: "string1",
-        name: "string",
-        date: "string",
-        description: "string",
-        img: "string",
-        count: 5
-      },
-      {
-        id: "string2",
-        name: "string",
-        date: "string",
-        description: "string",
-        img: "string",
-        count: 5
-      }]
     })
   }
   openModal(data?: ICategory) {

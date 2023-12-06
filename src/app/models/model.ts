@@ -4,7 +4,7 @@ export interface ICategory {
     date: string
     description:string
     img?:string
-    count:number
+    products?:IProduct[]
 }
 
 export interface PaginationInfo {
@@ -21,10 +21,10 @@ export interface PaginationInfo {
 
   export interface IProduct {
     id?: string
-    idParent: string
+    idCategory?: string
     name: string
-    price: string
-    date: string
+    price: number
+    date?: string
     description:string
-    img:string
+    img?:string
 }

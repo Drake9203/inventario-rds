@@ -36,9 +36,9 @@
                             <label class="">Ver
                                 <select class="btn-rounded" [ngModel]="paginationInfo.pageSize"
                                     (ngModelChange)="onChangePageSize($event)">
-                                    <option [ngValue]="20">20</option>
-                                    <option [ngValue]="40">40</option>
-                                    <option [ngValue]="60">60</option>
+                                    <option [ngValue]="5">5</option>
+                                    <option [ngValue]="10">10</option>
+                                    <option [ngValue]="15">15</option>
                                 </select>
                                 Registros</label>
                         </div>
@@ -84,9 +84,7 @@
                         <tbody *ngFor="let category of dataCategory">
                             <tr>
                                 <td>
-                                    <a href="javascript:void(0);" class="link-offset-3"
-                                    (click)="goTo(category.id!)"
-                                    >{{
+                                    <a href="javascript:void(0);" class="link-offset-3" (click)="goTo(category.id!)">{{
                                         category.name }}</a>
                                 </td>
                                 <td>
@@ -96,7 +94,7 @@
                                     <span>{{ category.description }} </span>
                                 </td>
                                 <td>
-                                    <span>{{ category.count }} </span>
+                                    <!-- <span>{{ category.products.length? category.products.length : 0 }} </span> -->
                                 </td>
                                 <td>
                                     <span>{{ category.img }} </span>
@@ -122,6 +120,16 @@
                                                 <path fill="currentColor"
                                                     d="M6 7H5v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7H6zm4 12H8v-9h2v9zm6 0h-2v-9h2v9zm.618-15L15 2H9L7.382 4H3v2h18V4z" />
                                             </svg>
+                                        </a> /
+                                        <a href="javascript: void(0);" class="has-arrow" aria-expanded="true"
+                                            (click)="onAddProduct(category.id!)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <line x1="12" y1="8" x2="12" y2="16"></line>
+                                                <line x1="8" y1="12" x2="16" y2="12"></line>
+                                            </svg>
                                         </a>
                                     </span>
                                 </td>
@@ -145,7 +153,6 @@
                             registros
                         </div>
                     </div>
-                    <!-- Pagination -->
                     <div class="col-sm-12 col-md-5">
                         <div class="text-md-right float-md-end pagination-rounded">
                             <ngb-pagination [collectionSize]="paginationInfo.totalRecords!"
@@ -154,7 +161,6 @@
                             </ngb-pagination>
                         </div>
                     </div>
-                    <!-- End Pagination -->
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ICategory } from '../../models/model';
+import { ICategory, IProduct } from '../../models/model';
 import { environment } from '../../../environments/environment';
 import { catchError } from 'rxjs';
 import httpHandlePrivateError from '../../utils/httpHandlePrivateError';
@@ -41,6 +41,10 @@ export class CategorysService {
       .pipe(
         catchError((error: HttpErrorResponse) => httpHandlePrivateError(error))
       );
+  }
+
+  createProduct(product: IProduct) {
+    return this.http.post(`${this.URL}product`, product);
   }
 
 }

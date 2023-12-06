@@ -35,7 +35,7 @@ export class CategoryComponent  implements OnInit{
         date: '',
         description: '',
         img: '',
-        count: 0
+        products: []
       }
     }
   }
