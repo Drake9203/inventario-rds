@@ -27,6 +27,9 @@ export class CategorysService {
   createCategory(category: ICategory) {
     return this.http.post(`${this.URL}category`, category);
   }
+  editCategory(category: ICategory) {
+    return this.http.put(`${this.URL}category`, category);
+  }
 
   deteleCategory(categoryId: string) {
     return this.http.delete(`${this.URL}category/${categoryId}`).pipe(

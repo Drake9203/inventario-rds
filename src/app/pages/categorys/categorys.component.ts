@@ -65,6 +65,8 @@ export class CategorysComponent {
       modalRef.close();
       
       if (category.id) {
+        this.categorysService.editCategory(category).subscribe((resp) => {
+        })
         
       } else {
         category.date = moment().format('YYYY-MM-DD');

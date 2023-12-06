@@ -43,6 +43,27 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                 return of(new HttpResponse({ status: 200, body: category![0] }));
             }
 
+            if (request.url.includes('/category') && request.method === 'PUT') {
+                console.log("category edit fake");
+                const objCategory = request.body;
+                console.log(objCategory, "objCategory");
+                let category
+                // validation
+                if (categorys) {
+                    category = categorys.filter((category: any) => category.id === objCategory.id);
+                    if (!category) {
+                        return throwError({ error: { message: 'Categoria "' + objCategory.id + '" no Existe' } });
+                    }
+                }
+                categorys.map(category => {
+                    if (category.id == objCategory.id) {
+                        Object.assign(category, objCategory);
+                    }
+                })
+                localStorage.setItem('categorys', JSON.stringify(categorys));
+                return of(new HttpResponse({ status: 200 }));
+            }
+
             if (request.url.includes('/category') && request.method === 'POST') {
                 // get new category object from post body
                 const newCategory = request.body;
@@ -116,18 +137,18 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                         if (!existsProduct) {
                             return throwError({ error: { message: 'Producto "' + idProduct + '" no Existe' } });
                         } else {
-                            let productsTemp:any = []
-                            categorys.map( category => {
-                                    if(category.id === idCategory){
-                                        category.products?.map(product =>{
-                                            if(product.id !== idProduct){
-                                                productsTemp.push(product)
-                                            } 
-                                        })
-                                        delete category.products
-                                        category.products = productsTemp
-                                    }
-                                    return category
+                            let productsTemp: any = []
+                            categorys.map(category => {
+                                if (category.id === idCategory) {
+                                    category.products?.map(product => {
+                                        if (product.id !== idProduct) {
+                                            productsTemp.push(product)
+                                        }
+                                    })
+                                    delete category.products
+                                    category.products = productsTemp
+                                }
+                                return category
                             })
                         }
                     }

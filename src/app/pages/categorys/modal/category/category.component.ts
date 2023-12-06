@@ -26,6 +26,7 @@ export class CategoryComponent  implements OnInit{
 
   ngOnInit(): void {
     this.title = 'EDITAR'
+    console.log(this.model, "model");
     if (!this.model) {
       this.title = 'CREAR'
       this.isEdit = false;
@@ -54,6 +55,7 @@ export class CategoryComponent  implements OnInit{
     let objCategory = this.validationform.value;
     if (!!this.isEdit) {
       objCategory.id = this.model.id;
+      objCategory.date = this.model.date;
     }
     this.onSave.emit(objCategory);
   }
