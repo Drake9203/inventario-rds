@@ -26,7 +26,6 @@ export class CategoryComponent  implements OnInit{
 
   ngOnInit(): void {
     this.title = 'EDITAR'
-    console.log(this.model, "model");
     if (!this.model) {
       this.title = 'CREAR'
       this.isEdit = false;

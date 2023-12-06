@@ -8,7 +8,6 @@ import { IProduct } from '../../../../models/model';
   styleUrls: ['./product.component.css']
 })
 export class ProductComponent implements OnInit {
-  @Input() idCategory!: string;
   @Input() product!: IProduct;
   @Output() onCancel: EventEmitter<void> = new EventEmitter();
   @Output() onSave: EventEmitter<any> = new EventEmitter();
@@ -29,7 +28,6 @@ export class ProductComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.idCategory, "idCategory");
     this.title = 'EDITAR'
     if (!this.product) {
       this.title = 'CREAR'
@@ -56,13 +54,11 @@ export class ProductComponent implements OnInit {
     this.submit = true;
     if (!this.validationform.valid) return;
     let objProduct = this.validationform.value;
-    if(this.idCategory){
-      objProduct.idCategory = this.idCategory
+    if(this.isEdit){
+      objProduct.idCategory = this.product.idCategory
+      objProduct.date = this.product.date
+      objProduct.id = this.product.id
     }
-    // if (!!this.isEdit) {
-    //   objProduct.id = this.model.id;
-    // }
-
     this.onSave.emit(objProduct);
   }
 }

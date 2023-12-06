@@ -17,8 +17,8 @@ import { CustomMessageAlert } from '../../utils/customMessageAlert';
 })
 
 export class ProductsByCategoryComponent {
-  title!:string
-  categoryId!:string
+  title!: string
+  categoryId!: string
   dataProducts!: IProduct[]
   dataProductTemp!: IProduct[]
   moment: any = moment;
@@ -42,39 +42,49 @@ export class ProductsByCategoryComponent {
     private categorysService: CategorysService,
     private productService: ProductService,
     private routeParams: ActivatedRoute,
-    private customMessageAlert:CustomMessageAlert
+    private customMessageAlert: CustomMessageAlert
   ) {
     this.categoryId = this.routeParams.snapshot.paramMap.get('id') as string;
 
-    if(this.categoryId){
+    if (this.categoryId) {
       this.getData()
     }
   }
 
   getData() {
     this.categorysService.getCategoryById(this.categoryId).subscribe((resp: ICategory) => {
-        this.dataProducts =  _.orderBy(resp.products, "name", "asc");
-        this.title = resp.name
-        this.paginationInfo.totalRecords = this.dataProducts.length;
+      this.dataProducts = _.orderBy(resp.products, "name", "asc");
+      this.title = resp.name
+      this.paginationInfo.totalRecords = this.dataProducts.length;
     })
   }
-  openModal() {
+  openModal(product?: IProduct) {
     const modalRef = this.modalService.open(ProductComponent, {
       centered: true,
       windowClass: 'modal-holder',
     });
-    modalRef.componentInstance.idCategory = this.categoryId;
+    modalRef.componentInstance.product = product;
     modalRef.componentInstance.onCancel.subscribe(() => modalRef.close());
     modalRef.componentInstance.onSave.subscribe((product: IProduct) => {
-      console.log(product, "product");
       modalRef.close();
       if (product.id) {
-        
+        this.productService.editProduct(product).subscribe((resp) => {
+          this.customMessageAlert.actionMsg('Registro guardado', "OK!!", 'success');
+        }, () => {
+          this.customMessageAlert.actionMsg('Error al editar el registro', "ERROR!!", "warning");
+        }, () => {
+        })
       } else {
         product.id = uuid.v4()
         product.date = moment().format('YYYY-MM-DD');
+        product.idCategory = this.categoryId
         this.productService.createProduct(product).subscribe((resp) => {
-        })
+          this.customMessageAlert.actionMsg('Registro creado', "OK!!", 'success');
+        }, () => {
+          this.customMessageAlert.actionMsg('Error al crear el registro', "ERROR!!", "warning");
+        }, () => {
+        }
+        )
       }
       this.getData()
     });
@@ -136,11 +146,11 @@ export class ProductsByCategoryComponent {
     }).then((result) => {
       /* Read more about handling dismissals below */
       if (result.isConfirmed) {
-        this.productService.deteleProduct(this.categoryId, product.id!).subscribe( catDelte => {
+        this.productService.deteleProduct(this.categoryId, product.id!).subscribe(catDelte => {
           this.customMessageAlert.actionMsg('Registro eliminado', "OK!!", 'success');
-        },()=>{
-          this.customMessageAlert.actionMsg('Error al eliminar el registro',"ERROR!!","warning");
-        },() => {
+        }, () => {
+          this.customMessageAlert.actionMsg('Error al eliminar el registro', "ERROR!!", "warning");
+        }, () => {
           this.getData();
         })
       }

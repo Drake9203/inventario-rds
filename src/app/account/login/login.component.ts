@@ -16,7 +16,6 @@ export class LoginComponent {
     this.authService.authState.subscribe((user) => {
       this.user = user;
       localStorage.setItem('googleUser', JSON.stringify(this.user))
-      console.log(user);
     });
   }
 

@@ -24,12 +24,10 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
             // get categories
             if (request.url.endsWith('/category') && request.method === 'GET') {
-                console.log("category fake");
                 return of(new HttpResponse({ status: 200, body: categorys }));
             }
 
             if (request.url.includes('/categoryById') && request.method === 'GET') {
-                console.log("categoryById fake");
                 const urlParts = request.url.split('/');
                 const idCategory = urlParts[urlParts.length - 1];
                 let category
@@ -44,9 +42,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             }
 
             if (request.url.includes('/category') && request.method === 'PUT') {
-                console.log("category edit fake");
                 const objCategory = request.body;
-                console.log(objCategory, "objCategory");
                 let category
                 // validation
                 if (categorys) {
@@ -70,7 +66,6 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                 // validation
                 if (categorys) {
                     const duplicateCategory = categorys.filter((category: any) => category.name === newCategory.name).length;
-                    console.log(duplicateCategory, "duplicateCategory");
                     if (duplicateCategory) {
                         return throwError({ error: { message: 'Category "' + newCategory.name + '" is already' } });
                     }
@@ -85,12 +80,10 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             if (request.url.includes('/category') && request.method === 'DELETE') {
 
                 const urlParts = request.url.split('/');
-                console.log(urlParts, "urlPartsurlParts");
                 const idCategory = urlParts[urlParts.length - 1];
                 // validation
                 if (categorys) {
                     const idExists = categorys.filter((category: any) => category.id === idCategory).length;
-                    console.log(idExists, "idExists");
                     if (!idExists) {
                         return throwError({ error: { message: 'Categoria "' + idCategory + '" no Existe' } });
                     }
@@ -114,7 +107,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                         }
                     });
                 } else {
-                    return throwError({ error: { message: 'Categoria no Existe' } });
+                    return throwError({ error: { message: 'Producto no Existe' } });
                 }
                 localStorage.setItem('categorys', JSON.stringify(categorys));
                 // respond 200 OK
@@ -158,6 +151,41 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                 // respond 200 OK
                 return of(new HttpResponse({ status: 200 }));
             }
+
+            if (request.url.includes('/product') && request.method === 'PUT') {
+                const objProduct = request.body;
+                const idCategory = objProduct.idCategory
+                const idProduct = objProduct.id
+                if (categorys) {
+                    const existsCategory: ICategory[] = categorys.filter((category: any) => category.id === idCategory);
+                    if (!existsCategory) {
+                        return throwError({ error: { message: 'Categoria "' + idCategory + '" no Existe' } });
+                    } else {
+                        const existsProduct = existsCategory![0].products?.filter((product: any) => product.id === idProduct);
+                        if (!existsProduct) {
+                            return throwError({ error: { message: 'Producto "' + idProduct + '" no Existe' } });
+                        } else {
+                            let productsTemp: any = []
+                            categorys.map(category => {
+                                if (category.id === idCategory) {
+                                    category.products?.map(product => {
+                                        if (product.id !== idProduct) {
+                                            productsTemp.push(product)
+                                        }
+                                    })
+                                    delete category.products
+                                    category.products = productsTemp
+                                    category.products?.push(objProduct)
+                                }
+                                return category
+                            })
+                        }
+                    }
+                }
+                localStorage.setItem('categorys', JSON.stringify(categorys));
+                return of(new HttpResponse({ status: 200 }));
+            }
+
 
             // pass through any requests not handled above
             return next.handle(request);

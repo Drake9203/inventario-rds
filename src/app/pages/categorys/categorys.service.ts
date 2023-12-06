@@ -25,10 +25,12 @@ export class CategorysService {
   }
 
   createCategory(category: ICategory) {
-    return this.http.post(`${this.URL}category`, category);
+    return this.http.post(`${this.URL}category`, category).pipe(
+      catchError((error: HttpErrorResponse) => httpHandlePrivateError(error)));
   }
   editCategory(category: ICategory) {
-    return this.http.put(`${this.URL}category`, category);
+    return this.http.put(`${this.URL}category`, category).pipe(
+      catchError((error: HttpErrorResponse) => httpHandlePrivateError(error)))
   }
 
   deteleCategory(categoryId: string) {

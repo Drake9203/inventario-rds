@@ -17,12 +17,15 @@ export class ProductService {
     return this.http.post(`${this.URL}product`, product);
   }
 
-  deteleProduct(categoryId:string, productId: string) {
-    console.log(categoryId, "categoryId SS");
-    console.log(productId, "productId SS");
+  deteleProduct(categoryId: string, productId: string) {
     return this.http.delete(`${this.URL}product/${categoryId}/${productId}`).pipe(
       catchError((error: HttpErrorResponse) => httpHandlePrivateError(error))
     );
+  }
+
+  editProduct(product: IProduct) {
+    return this.http.put(`${this.URL}product`, product).pipe(
+      catchError((error: HttpErrorResponse) => httpHandlePrivateError(error)));
   }
 
 }

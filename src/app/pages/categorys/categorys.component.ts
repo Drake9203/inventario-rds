@@ -41,14 +41,14 @@ export class CategorysComponent {
     private router: Router,
     private categorysService: CategorysService,
     private productService: ProductService,
-    private customMessageAlert:CustomMessageAlert
+    private customMessageAlert: CustomMessageAlert
   ) {
     this.getData()
   }
 
   getData() {
     this.categorysService.getCategorys().subscribe((resp: ICategory[]) => {
-      if(resp.length > 0){
+      if (resp.length > 0) {
         this.dataCategory = resp
         this.paginationInfo.totalRecords = resp.length;
       }
@@ -63,18 +63,26 @@ export class CategorysComponent {
     modalRef.componentInstance.onCancel.subscribe(() => modalRef.close());
     modalRef.componentInstance.onSave.subscribe((category: ICategory) => {
       modalRef.close();
-      
+
       if (category.id) {
         this.categorysService.editCategory(category).subscribe((resp) => {
+          this.customMessageAlert.actionMsg('Registro guardado', "OK!!", 'success');
+        }, () => {
+          this.customMessageAlert.actionMsg('Error al editar el registro', "ERROR!!", "warning");
+        }, () => {
         })
-        
+
       } else {
         category.date = moment().format('YYYY-MM-DD');
         category.id = uuid.v4()
         this.categorysService.createCategory(category).subscribe((resp) => {
+          this.customMessageAlert.actionMsg('Registro guardado', "OK!!", 'success');
+        }, () => {
+          this.customMessageAlert.actionMsg('Error al editar el registro', "ERROR!!", "warning");
+        }, () => {
         })
       }
-      this.getData()
+      this.getData();
     });
   }
 
@@ -100,9 +108,7 @@ export class CategorysComponent {
   }
 
   onChangePageSize(dataPerPage: number) {
-    console.log(dataPerPage, "dataPerPage");
     this.paginationInfo.pageSize = dataPerPage;
-    console.log(this.paginationInfo.pageSize, "this.paginationInfo.pageSize");
   }
 
   sort(property: string | number) {
@@ -134,40 +140,59 @@ export class CategorysComponent {
     }).then((result) => {
       /* Read more about handling dismissals below */
       if (result.isConfirmed) {
-        this.categorysService.deteleCategory(category.id!).subscribe( catDelte => {
+        this.categorysService.deteleCategory(category.id!).subscribe(catDelte => {
           this.customMessageAlert.actionMsg('Registro eliminado', "OK!!", 'success');
-        },()=>{
-          this.customMessageAlert.actionMsg('Error al eliminar el registro',"ERROR!!","warning");
-        },() => {
+        }, () => {
+          this.customMessageAlert.actionMsg('Error al eliminar el registro', "ERROR!!", "warning");
+        }, () => {
           this.getData();
         })
       }
     });
   }
 
-  goTo(id:string){
+  goTo(id: string) {
     this.router.navigate(['category/' + id]);
   }
 
-  onAddProduct(idCategory:string){
+  onAddProduct(idCategory:string) {
     const modalRef = this.modalService.open(ProductComponent, {
       centered: true,
       windowClass: 'modal-holder',
     });
-    modalRef.componentInstance.idCategory = idCategory;
     modalRef.componentInstance.onCancel.subscribe(() => modalRef.close());
     modalRef.componentInstance.onSave.subscribe((product: IProduct) => {
-      console.log(product, "product");
       modalRef.close();
-      if (product.id) {
-        
-      } else {
         product.id = uuid.v4()
         product.date = moment().format('YYYY-MM-DD');
+        product.idCategory = idCategory
         this.productService.createProduct(product).subscribe((resp) => {
+          this.customMessageAlert.actionMsg('Registro guardado', "OK!!", 'success');
+        }, () => {
+          this.customMessageAlert.actionMsg('Error al crear el registro', "ERROR!!", "warning");
+        }, () => {
         })
-      }
+      
       this.getData()
     });
   }
 }
+// if (category.id) {
+//   this.categorysService.editCategory(category).subscribe((resp) => {
+//     this.customMessageAlert.actionMsg('Registro guardado', "OK!!", 'success');
+//   }, () => {
+//     this.customMessageAlert.actionMsg('Error al editar el registro', "ERROR!!", "warning");
+//   }, () => {
+//   })
+
+// } else {
+//   category.date = moment().format('YYYY-MM-DD');
+//   category.id = uuid.v4()
+//   this.categorysService.createCategory(category).subscribe((resp) => {
+//     this.customMessageAlert.actionMsg('Registro guardado', "OK!!", 'success');
+//   }, () => {
+//     this.customMessageAlert.actionMsg('Error al editar el registro', "ERROR!!", "warning");
+//   }, () => {
+//   })
+// }
+// this.getData();
