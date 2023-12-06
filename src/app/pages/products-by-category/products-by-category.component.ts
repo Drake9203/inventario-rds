@@ -10,6 +10,7 @@ import { ProductComponent } from './modal/product/product.component';
 import { ProductService } from './product.service';
 import Swal, { SweetAlertIcon } from 'sweetalert2';
 import { CustomMessageAlert } from '../../utils/customMessageAlert';
+import { GenerateExcelService } from '../../services/excel/generate-excel.service';
 @Component({
   selector: 'app-products-by-category',
   templateUrl: './products-by-category.component.html',
@@ -42,7 +43,8 @@ export class ProductsByCategoryComponent {
     private categorysService: CategorysService,
     private productService: ProductService,
     private routeParams: ActivatedRoute,
-    private customMessageAlert: CustomMessageAlert
+    private customMessageAlert: CustomMessageAlert,
+    private generateExcelService: GenerateExcelService
   ) {
     this.categoryId = this.routeParams.snapshot.paramMap.get('id') as string;
 
@@ -155,5 +157,9 @@ export class ProductsByCategoryComponent {
         })
       }
     });
+  }
+
+  exportDataExcel(){
+    this.generateExcelService.exportDataExcel(this.dataProducts, this.title, true)
   }
 }

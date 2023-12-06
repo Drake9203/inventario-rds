@@ -11,6 +11,7 @@ import { CustomMessageAlert } from '../../utils/customMessageAlert';
 import * as _ from 'lodash';
 import { ProductComponent } from '../products-by-category/modal/product/product.component';
 import { ProductService } from '../products-by-category/product.service';
+import { GenerateExcelService } from '../../services/excel/generate-excel.service';
 @Component({
   selector: 'app-categorys',
   templateUrl: './categorys.component.html',
@@ -41,7 +42,8 @@ export class CategorysComponent {
     private router: Router,
     private categorysService: CategorysService,
     private productService: ProductService,
-    private customMessageAlert: CustomMessageAlert
+    private customMessageAlert: CustomMessageAlert,
+    private generateExcelService: GenerateExcelService
   ) {
     this.getData()
   }
@@ -176,23 +178,8 @@ export class CategorysComponent {
       this.getData()
     });
   }
-}
-// if (category.id) {
-//   this.categorysService.editCategory(category).subscribe((resp) => {
-//     this.customMessageAlert.actionMsg('Registro guardado', "OK!!", 'success');
-//   }, () => {
-//     this.customMessageAlert.actionMsg('Error al editar el registro', "ERROR!!", "warning");
-//   }, () => {
-//   })
 
-// } else {
-//   category.date = moment().format('YYYY-MM-DD');
-//   category.id = uuid.v4()
-//   this.categorysService.createCategory(category).subscribe((resp) => {
-//     this.customMessageAlert.actionMsg('Registro guardado', "OK!!", 'success');
-//   }, () => {
-//     this.customMessageAlert.actionMsg('Error al editar el registro', "ERROR!!", "warning");
-//   }, () => {
-//   })
-// }
-// this.getData();
+  exportDataExcel(){
+    this.generateExcelService.exportDataExcel(this.dataCategory, "CATEGORIAS", false)
+  }
+}
